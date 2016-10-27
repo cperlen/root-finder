@@ -32,6 +32,12 @@ class Polynomial(object):
         return "Polynomial(%s)" % (", ".join([str(x) for x in self._coeffs]))
 
     def f(self,x):
+        ans = self._coeffs[0]
+        for c in self._coeffs[1:]:
+            ans = x*ans + c
+        return ans        
+    
+    '''
         try:
             deg = len(self._coeffs)
         except TypeError:
@@ -41,7 +47,7 @@ class Polynomial(object):
         for i in range(1,deg):
             ans = ans + self._coeffs[deg-1-i]*pow(x,i) #fixed polynomial def
         return ans
-    
+    '''
     def __call__(self, x):
         return self.f(x)
 

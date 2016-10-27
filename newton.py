@@ -32,7 +32,7 @@ class Newton(object):
         """Take a single step of a Newton method, starting from x
         If the argument fx is provided, assumes fx = f(x)"""
         if fx is None:
-            fx = self._f(x)
+            fx = self._f (x)
         Df_x = F.ApproximateJacobian(self._f, x, self._dx)
         h = N.linalg.solve(N.matrix(Df_x), N.matrix(fx))
-        return x + h
+        return x - h #fixed step
