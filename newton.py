@@ -7,7 +7,7 @@ import numpy as N
 import functions as F
 
 class Newton(object):
-    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6):
+    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, Df = None):
         """Return a new object to find roots of f(x) = 0 using Newton's method.
         tol:     tolerance for iteration (iterate until |f(x)| < tol)
         maxiter: maximum number of iterations to perform
@@ -16,7 +16,8 @@ class Newton(object):
         self._tol = tol
         self._maxiter = maxiter
         self._dx = dx
-
+        self._Df = Df
+  
     def solve(self, x0):
         """Return a root of f(x) = 0, using Newton's method, starting from
         initial guess x0"""
@@ -35,7 +36,10 @@ class Newton(object):
         If the argument fx is provided, assumes fx = f(x)"""
         if fx is None:
             fx = self._f (x)
-        Df_x = F.ApproximateJacobian(self._f, x, self._dx)
+        if self._Df is None:
+            Df_x = F.ApproximateJacobian(self._f, x, self._dx)
+        else:
+            Df_x = F.AnalyticJacobian(self._Df, x)
         try:
             h = N.linalg.solve(N.matrix(Df_x), N.matrix(fx))
         except N.LinAlgError: #catch non-invertibility

@@ -15,7 +15,13 @@ def ApproximateJacobian(f, x, dx=1e-6):
         v[i,0] = dx # derivative of jth component
         Df_x[:,i] = 1/dx * (f(x + v) - fx) #fixed definition of derivative
     return Df_x
-
+    
+def AnalyticJacobian(f,x):
+    #print "Using Analytic Jacobian"
+    Df_x = f(x)
+    return Df_x
+    
+    
 class Polynomial(object):
     """Callable polynomial object.
 
