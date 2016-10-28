@@ -17,7 +17,7 @@ def ApproximateJacobian(f, x, dx=1e-6):
     return Df_x
     
 def AnalyticJacobian(f,x):
-    #print "Using Analytic Jacobian"
+    #print
     Df_x = f(x)
     return Df_x
     

@@ -98,8 +98,39 @@ class TestFunctions(unittest.TestCase):
             Df_x = F.ApproximateJacobian(f, x, dx)
             self.assertEqual(Df_x.shape, (1,1))
             self.assertAlmostEqual(Df_x, df_dx(x),places = 4)
-
+    ''' 
+    tests analytic jacobian correctly computed'''
+    def testAnalytic1d(self):
+        def f(x):
+            return N.sin(x*x) + x*N.cos(x)
+        def df_dx(x):
+            return 2*x * N.cos(x*x) + N.cos(x) - x * N.sin(x)
+        dx = 1.e-6
+        for x in N.linspace(-2,2,11): 
+            approx_Df_x = F.ApproximateJacobian(f, x, dx)
+            Df_x = F.AnalyticJacobian(df_dx,x)
+            self.assertAlmostEqual(approx_Df_x, Df_x, places = 4)
     
+    def testAnalyticMulti(self):
+        def f(x):
+            p = F.Polynomial([2,-3, 0, 8])
+            return N.matrix([[x.item(1)*N.cos(x.item(0))],
+                              [x.item(0)*p(x.item(1))]])
+            
+        def df_dx(x):
+            p = F.Polynomial([2,-3, 0, 8])
+            dp_dx = F.Polynomial([6,-6,0])
+            return N.matrix([[-x.item(1)*N.sin(x.item(0)),N.cos(x.item(0))],
+                              [p(x.item(1)),x.item(0)*dp_dx(x.item(1))]]) 
+                              
+        dx = 1.e-6
+        for x in [[1.,1.],[0.,3.],[3.,0.],[2.,-3.],[0.,0.]]: 
+            x = N.transpose(N.matrix(x))           
+            approx_Df_x = F.ApproximateJacobian(f, x, dx)
+            Df_x = F.AnalyticJacobian(df_dx,x)
+            N.testing.assert_array_almost_equal(approx_Df_x, Df_x, decimal=4) 
+
+       
 if __name__ == '__main__':
     unittest.main()
 
