@@ -26,6 +26,8 @@ class Newton(object):
             if N.linalg.norm(fx) < self._tol:
                 return x
             x = self.step(x, fx)
+        if N.linalg.norm(fx) > self._tol:  #check for convergence
+            raise Exception('Test did not converge in provided iterations')
         return x
 
     def step(self, x, fx=None):
@@ -34,5 +36,8 @@ class Newton(object):
         if fx is None:
             fx = self._f (x)
         Df_x = F.ApproximateJacobian(self._f, x, self._dx)
-        h = N.linalg.solve(N.matrix(Df_x), N.matrix(fx))
+        try:
+            h = N.linalg.solve(N.matrix(Df_x), N.matrix(fx))
+        except N.LinAlgError: #catch non-invertibility
+            raise Exception('Test did not converge, Df_x singular')
         return x - h #fixed step

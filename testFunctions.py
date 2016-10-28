@@ -14,7 +14,8 @@ class TestFunctions(unittest.TestCase):
         dx = 1.e-3
         Df_x = F.ApproximateJacobian(f, x0, dx)
         self.assertEqual(Df_x.shape, (1,1))
-        self.assertAlmostEqual(Df_x, slope)
+        self.assertAlmostEqual(Df_x, slope)  
+        
 
     def testApproxJacobian2(self):
         A = N.matrix("1. 2.; 3. 4.")
@@ -42,6 +43,7 @@ class TestFunctions(unittest.TestCase):
             Df_x = F.ApproximateJacobian(p, x, dx)
             self.assertEqual(Df_x.shape, (1,1))
             N.testing.assert_array_almost_equal(Df_x, dp_dx(x))
+
     ''' 
     tests Jacobian correctly computes deriv of multidim nonlinear functions
     where each function depends on only one variable'''

@@ -2,7 +2,7 @@ import numpy as N
 
 
 def ApproximateJacobian(f, x, dx=1e-6):
-    """Return an approximation of the Jacobian Df(x) as a numpy matrix"""
+    """Return an approximation of the Jacobian Df(x) as a numpy matrix"""                        
     try:
         n = len(x)
     except TypeError:
@@ -13,7 +13,7 @@ def ApproximateJacobian(f, x, dx=1e-6):
     for i in range(n):
         v = N.matrix(N.zeros((n,1)))
         v[i,0] = dx # derivative of jth component
-        Df_x[:,i] = (f(x + v) - fx)/dx #fixed definition of derivative
+        Df_x[:,i] = 1/dx * (f(x + v) - fx) #fixed definition of derivative
     return Df_x
 
 class Polynomial(object):
@@ -37,17 +37,6 @@ class Polynomial(object):
             ans = x*ans + c
         return ans        
     
-    '''
-        try:
-            deg = len(self._coeffs)
-        except TypeError:
-            deg = 1
-            
-        ans = self._coeffs[deg-1] 
-        for i in range(1,deg):
-            ans = ans + self._coeffs[deg-1-i]*pow(x,i) #fixed polynomial def
-        return ans
-    '''
     def __call__(self, x):
         return self.f(x)
 
