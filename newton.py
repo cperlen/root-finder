@@ -7,7 +7,7 @@ import numpy as N
 import functions as F
 
 class Newton(object):
-    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, Df = None):
+    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, Df = None, r = N.Inf):
         """Return a new object to find roots of f(x) = 0 using Newton's method.
         tol:     tolerance for iteration (iterate until |f(x)| < tol)
         maxiter: maximum number of iterations to perform
@@ -17,7 +17,8 @@ class Newton(object):
         self._maxiter = maxiter
         self._dx = dx
         self._Df = Df
-  
+        self._r = r
+        
     def solve(self, x0):
         """Return a root of f(x) = 0, using Newton's method, starting from
         initial guess x0"""
@@ -27,6 +28,8 @@ class Newton(object):
             if N.linalg.norm(fx) < self._tol:
                 return x
             x = self.step(x, fx)
+            if N.linalg.norm(x - x0) > self._r:
+                raise Exception('Solution not within permitted radius of initial guess')
         if N.linalg.norm(fx) > self._tol:  #check for convergence
             raise Exception('Test did not converge in provided iterations')
         return x
