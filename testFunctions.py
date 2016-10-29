@@ -5,6 +5,10 @@ import numpy as N
 import unittest
 
 class TestFunctions(unittest.TestCase):
+    def testPolynomial(self): 
+        p = F.Polynomial([0,2,3,-1,3])
+        for x in N.linspace(-2,2,11):    
+            self.assertAlmostEqual(p(x),2*x*x*x + 3*x*x - 1 *x +3)
 
     def testApproxJacobian1(self):
         slope = 3.0
@@ -26,15 +30,9 @@ class TestFunctions(unittest.TestCase):
         Df_x = F.ApproximateJacobian(f, x0, dx)
         self.assertEqual(Df_x.shape, (2,2))
         N.testing.assert_array_almost_equal(Df_x, A)
-
-    def testPolynomial(self):
-        # p(x) = x^2 + 2x + 3
-        p = F.Polynomial([1, 2, 3])
-        for x in N.linspace(-2,2,11):
-            self.assertEqual(p(x), x**2 + 2*x + 3)
     
     '''
-    tests Jacobian correct for polynomial (ie nonlinear) 1-dim function'''
+    tests Jacobian correct for polynomial 1-dim function'''
     def testApproxJacobian3(self):
         p = F.Polynomial([1, 2, 3])
         dp_dx = F.Polynomial([2,2]) 
@@ -110,7 +108,8 @@ class TestFunctions(unittest.TestCase):
             approx_Df_x = F.ApproximateJacobian(f, x, dx)
             Df_x = F.AnalyticJacobian(df_dx,x)
             self.assertAlmostEqual(approx_Df_x, Df_x, places = 4)
-    
+            self.assertNotEqual(approx_Df_x, Df_x)
+            
     def testAnalyticMulti(self):
         def f(x):
             p = F.Polynomial([2,-3, 0, 8])
@@ -129,7 +128,7 @@ class TestFunctions(unittest.TestCase):
             approx_Df_x = F.ApproximateJacobian(f, x, dx)
             Df_x = F.AnalyticJacobian(df_dx,x)
             N.testing.assert_array_almost_equal(approx_Df_x, Df_x, decimal=4) 
-
+            
        
 if __name__ == '__main__':
     unittest.main()

@@ -7,6 +7,12 @@ import numpy as N
 class TestNewton(unittest.TestCase):
     def testLinear(self):
         f = lambda x : 3.0 * x + 6.0
+        solver = newton.Newton(f, tol = 1.e-15, maxiter=200)
+        x = solver.solve(2.0)
+        self.assertEqual(x, -2.0) 
+        
+    def testLinearTol(self):
+        f = lambda x : 3.0 * x + 6.0
         solver = newton.Newton(f, tol = 1.e-15, maxiter=2)
         #x = solver.solve(2.0)
         #self.assertEqual(x, -2.0) fails for prescribed tol
@@ -80,15 +86,7 @@ class TestNewton(unittest.TestCase):
         x0 = N.matrix("1; 5")
         x = solver.solve(x0)
         N.testing.assert_array_almost_equal(x, N.matrix([[0.],[6.]]))
-
-    def testMultiDimNoRoots(self):
-        def f(x):
-            p = F.Polynomial([1, 0, 1])
-            return N.matrix([[N.sin(x.item(0))],[p(x.item(1))]])
-        solver = newton.Newton(f, tol=1.e-15, maxiter=1000)
-        with self.assertRaises(Exception):
-            solver.solve(2.0)   
-            
+        
     def testMultiDimConv2(self): 
         def f(x):
             p = F.Polynomial([1, 0, 12])
@@ -100,6 +98,14 @@ class TestNewton(unittest.TestCase):
         x = solver.solve(x0)
         N.testing.assert_array_almost_equal(x, N.matrix([[3.],[-1.]]))
     
+    def testMultiDimNoRoots(self):
+        def f(x):
+            p = F.Polynomial([1, 0, 1])
+            return N.matrix([[N.sin(x.item(0))],[p(x.item(1))]])
+        solver = newton.Newton(f, tol=1.e-15, maxiter=1000)
+        with self.assertRaises(Exception):
+            solver.solve(2.0)   
+            
     '''tests including analytic solver'''
     
     def testAnalytic1D(self):
